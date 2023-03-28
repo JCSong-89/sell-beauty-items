@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Reverse Japan</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class='{{if eq .Theme "dark"}}dark{{else}}light{{end}}'>
+<header>
+    <a href="/" class="logo">
+        <img src="/static/images/logo.png" alt="Reverse Japan">
+    </a>
+    <nav>
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Shop</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </nav>
+    <button class="theme-toggle" aria-label="Toggle theme"></button>
+</header>
+<main>
+    <h1>New Arrivals</h1>
+    <div class="products">
+        {{range .Products}}
+        <div class="article">
+            <img src="{{.ImageURL}}">
+            <h2>{{.Name}}</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam id enim sit amet turpis blandit sollicitudin.</p>
+            <div class="price">{{.Price}}</div>
+        </div>
+        {{end}}
+    </div>
+</main>
+<script src="/static/js/theme-toggle.js"></script>
+</body>
+</html>

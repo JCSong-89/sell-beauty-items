@@ -1,0 +1,197 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    margin: 0 auto;
+    max-width: 1200px;
+    color: #333;
+    background: #fff;
+}
+/* This is the dark mode stylesheet */
+
+body.dark {
+    background-color: #111;
+    color: #ddd;
+}
+
+a.dark {
+    color: #ddd;
+}
+
+.product__name.dark {
+    color: #ddd;
+}
+
+.product__price.dark {
+    color: #bbb;
+}
+
+.button.dark {
+    background-color: #333;
+    color: #ddd;
+}
+
+header {
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+}
+
+.logo {
+    width: 120px;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    align-items: center;
+}
+
+nav li {
+    margin-left: 30px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+nav a:hover {
+    color: #000;
+}
+
+main {
+    padding: 30px;
+}
+
+h1 {
+    font-size: 32px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.products {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-gap: 30px;
+}
+
+.article {
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    text-align: center;
+}
+
+.article img {
+    margin-bottom: 20px;
+    width: 100%;
+    height: auto;
+    max-height: 200px;
+}
+
+.article h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.article p {
+    font-size: 16px;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.article .price {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+}
+
+/* 토글 버튼 스타일 */
+.theme-toggle {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    display: inline-block;
+    width: 2.5rem;
+    height: 1.5rem;
+    cursor: pointer;
+    border-radius: 1rem;
+    background-color: #ccc;
+}
+
+/* 토글 버튼 볼 스타일 */
+.theme-toggle::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0.25rem;
+    left: 0.25rem;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background-color: #fff;
+    transition: transform 0.2s ease-in-out;
+}
+
+/* 다크 모드 버튼 볼 스타일 */
+.dark .theme-toggle::before {
+    transform: translateX(100%);
+    background-color: #333;
+}
+
+/* 토글 버튼 스크린 리더용 라벨 */
+.theme-toggle::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+}
+
+/* 토글 버튼 접근성 */
+.theme-toggle:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+}
+
+
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 20px 30px;
+    }
+
+    .logo {
+        margin-bottom: 20px;
+    }
+
+    nav ul {
+        margin-left: -20px;
+    }
+
+    nav li {
+        margin-left: 20px;
+    }
+
+    main {
+        padding: 30px 20px;
+    }
+
+    h1 {
+        font-size: 28px;
+        margin-bottom: 20px;
+    }
+}
