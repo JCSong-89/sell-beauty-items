@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -8,12 +9,13 @@ import (
 	"path/filepath"
 	authService "sell-beauty-items/internal/auth/service"
 	productRepository "sell-beauty-items/internal/products/repository"
+	productService "sell-beauty-items/internal/products/service"
 	userRepository "sell-beauty-items/internal/users/repository"
+	"sell-beauty-items/pkg/middlewares"
+	"sell-beauty-items/pkg/utils"
 )
 
 // templates is a global variable that holds all of the parsed templates
-var templates = template.Must(template.ParseGlob("../static/*.html"))
-
 /*
 func apiHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
@@ -59,25 +61,57 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 */
 
 func main() {
+
+	dir, err := os.Getwd()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(dir)
+	templatesPath := filepath.Join(dir, "static", "*.html")
+	templates := template.Must(template.ParseGlob(templatesPath))
+
 	// Register the handlers for the server
 	authServiceObject := authService.AuthService{
 		T: templates,
 		U: &userRepository.UserRepository{},
 		P: &productRepository.ProductRepository{},
 	}
-
-	wd, err := os.Getwd()
-	if err != nil {
-		log.Fatal("Error getting current working directory:", err)
+	productServiceObject := productService.ProductService{
+		Repository: &productRepository.ProductRepository{},
 	}
-	staticDir := filepath.Join(wd, "..", "static")
 
-	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir(staticDir))))
-	http.HandleFunc("/", authServiceObject.IndexHandler)
-	http.HandleFunc("/login", authServiceObject.LoginHandler)
+	staticDir := filepath.Join(dir, "static")
+	mux := http.NewServeMux()
 
+	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir(staticDir))))
+	handler := middlewares.CookieMiddleware(mux)
+
+	mux.HandleFunc("/", authServiceObject.IndexHandler)
+	mux.HandleFunc("/login", authServiceObject.LoginHandler)
+	mux.HandleFunc("/logout", authServiceObject.LogoutHandler)
+	mux.HandleFunc("/shop", productServiceObject.GetAllProducts)
+
+	handler = middlewares.RequestMiddleware(mux)
+	alias := ""
+	aliasFlug := false
+
+	go func() {
+		for {
+			select {
+			case req := <-middlewares.RequestChan:
+				alias, aliasFlug = utils.ShopURLStringController(req.URL.String())
+				/* 싱글톤으로 만들어서 해당 싱글톤 객체로 처리도록 변경*/
+				fmt.Printf("URL: %s\nMethod: %s\n\n", req.URL.String(), req.Method)
+			}
+		}
+	}()
+
+	if aliasFlug {
+		mux.HandleFunc("/shop/"+alias, productServiceObject.GetHandler)
+	}
 	// Start the server and listen for incoming connections
-	if err := http.ListenAndServe(":8080", nil); err != nil {
+	if err := http.ListenAndServe(":8080", handler); err != nil {
 		panic(err)
 	}
 }
