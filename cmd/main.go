@@ -63,6 +63,7 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 func main() {
 
 	dir, err := os.Getwd()
+	fmt.Println(dir)
 	if err != nil {
 		log.Fatal(err)
 	}
